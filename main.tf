@@ -1,12 +1,3 @@
-terraform {
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "2.39.0"
-    }
-  }
-}
-
 provider "azurerm" {
   features {}
 }
@@ -25,8 +16,8 @@ module "servers_uscentral" {
     GatewaySubnet      = "10.30.255.0/24"
     AzureBastionSubnet = "10.30.172.0/24"
   }
-  server_name_prefix    = var.server_name_prefix
-  server_count          = var.server_count
-  server_username       = var.server_username
-  tags                  = var.tags
+  server_name_prefix = var.server_name_prefix
+  server_count       = var.server_count
+  server_username    = var.server_username
+  tags               = var.tags
 }

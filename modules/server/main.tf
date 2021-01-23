@@ -56,15 +56,15 @@ resource "azurerm_network_interface" "nic" {
 }
 
 resource "azurerm_linux_virtual_machine" "vm" {
-  name                  = "${var.server_name_prefix}-${format("%02d", count.index)}"
-  resource_group_name   = azurerm_resource_group.server_rg.name
-  location              = azurerm_resource_group.server_rg.location
-  size                  = "Standard_B1ms"
-  count                 = var.server_count
-  admin_username        = var.server_username
-  admin_password        = data.azurerm_key_vault_secret.admin_password.value
+  name                            = "${var.server_name_prefix}-${format("%02d", count.index)}"
+  resource_group_name             = azurerm_resource_group.server_rg.name
+  location                        = azurerm_resource_group.server_rg.location
+  size                            = "Standard_B1ms"
+  count                           = var.server_count
+  admin_username                  = var.server_username
+  admin_password                  = data.azurerm_key_vault_secret.admin_password.value
   disable_password_authentication = false
-  network_interface_ids = [azurerm_network_interface.nic[count.index].id]
+  network_interface_ids           = [azurerm_network_interface.nic[count.index].id]
 
   os_disk {
     caching              = "ReadWrite"
