@@ -1,0 +1,54 @@
+- name: Install Docker
+  hosts: all
+  vars:
+    packages:
+      - name: docker-ce
+        required: True
+      - name: docker-ce-cli
+        required: True
+      - name: containerd.io
+        required: True
+      - name: apt-transport-https
+        required: True
+      - name: ca-certificates
+        required: True
+      - name: curl
+        required: True
+      - name: gnupg-agent 
+        required: True
+      - name: software-properties-common
+        required: True
+    docker_admins: 
+      - swatkins
+  tasks:
+    - name: Ensure Docker key is present
+      apt_key: 
+        id: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
+        keyserver: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+      become: yes
+
+    - name: Ensure docker repository is listed in sources
+      lineinfile: 
+        path: /etc/apt/sources.list
+        line: deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable
+      become: yes
+    
+    - name: Update apt-get repo and cache
+      apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
+      become: yes
+
+    - name: Ensure required packages are installed
+      apt: 
+        name: '{{ item.name }}' 
+        state: present
+      loop: '{{packages}}'
+      become: yes
+    
+    - name: Ensure proper users are in Docker admin group
+      user:
+        name: '{{ item }}'
+        groups: docker
+        append: yes
+      loop: '{{ docker_admins }}'
+      become: yes
